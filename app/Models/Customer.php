@@ -12,6 +12,11 @@ class Customer extends Model
     protected $table = 'customer';
 
     protected $fillable = [
-        'name', 'email', 'phone'
+        'name', 'email', 'phone','user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

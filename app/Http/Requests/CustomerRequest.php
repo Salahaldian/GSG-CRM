@@ -29,7 +29,7 @@ class CustomerRequest extends FormRequest
                     return $fail('This :attribute value is forbidden!');
                 }
             }],
-            'email' => 'required|email|max:255|unique:customer,email,'.$id,
+            'email' => 'required|email|max:255'.$id,
             'phone' => 'nullable|string|max:20',
         ];
     }

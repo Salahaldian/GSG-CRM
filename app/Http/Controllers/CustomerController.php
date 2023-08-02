@@ -13,7 +13,7 @@ class CustomerController extends Controller
 {
     public function index()
     {
-        $customer = Customer::all();
+        $customer = Customer::all()->where('user_id',Auth::id());
         return view('customers.index', compact('customer'));
     }
 
@@ -35,28 +35,39 @@ class CustomerController extends Controller
 
     public function show(Request $request, $id)
     {
-        $customers = Customer::findOrFail($id);
-        return view('customers.show', compact('customers'));
+        $customer = Customer::findOrFail($id);
+        return view('customers.show', compact('customer'));
     }
 
     public function edit($id)
     {
-        $customers = Customer::findOrFail($id);
-        return view('customers.edit', compact('customers'));
+        $customer = Customer::findOrFail($id);
+        return view('customers.edit', compact('customer'));
     }
 
-    public function update(CustomerRequest $request,Customer $customer)
+    public function update(CustomerRequest $request, Customer $customer)
     {
+        // $validated = $request->validated();
+        // $customer->update($validated);
+        // return redirect()->route('customers.index')
+        //     ->with('success', 'Customer updated successfully.');
         $validated = $request->validated();
-        $customer->update($validated);
-        return redirect()->route('customers.index')
-            ->with('success', 'Customer updated successfully.');
+        // dd($validated);
+        try {
+            $customer->update($validated);
+            return redirect()->route('customers.index')
+                ->with('success', 'Customer updated successfully.');
+        } catch (\Exception $e) {
+            // يمكنك إضافة رسالة الخطأ أدناه لتحديد سبب عدم التحديث في حالة حدوث خطأ.
+            // return back()->with('error', 'Failed to update customer: ' . $e->getMessage());
+            return back()->with('error', 'Failed to update customer. Please try again.');
+        }
     }
 
     public function destroy($id)
     {
-        $customers = Customer::find($id);
-        $customers->delete();
+        $customer = Customer::find($id);
+        $customer->delete();
         return redirect()->route('customers.index')
             ->with('success', 'Customer deleted successfully.');
     }
