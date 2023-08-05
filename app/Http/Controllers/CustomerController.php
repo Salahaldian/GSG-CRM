@@ -45,23 +45,13 @@ class CustomerController extends Controller
         return view('customers.edit', compact('customer'));
     }
 
-    public function update(CustomerRequest $request, Customer $customer)
+    public function update(CustomerRequest $request)
     {
-        // $validated = $request->validated();
-        // $customer->update($validated);
-        // return redirect()->route('customers.index')
-        //     ->with('success', 'Customer updated successfully.');
         $validated = $request->validated();
-        // dd($validated);
-        try {
-            $customer->update($validated);
-            return redirect()->route('customers.index')
-                ->with('success', 'Customer updated successfully.');
-        } catch (\Exception $e) {
-            // يمكنك إضافة رسالة الخطأ أدناه لتحديد سبب عدم التحديث في حالة حدوث خطأ.
-            // return back()->with('error', 'Failed to update customer: ' . $e->getMessage());
-            return back()->with('error', 'Failed to update customer. Please try again.');
-        }
+        Customer::query()
+            ->update($validated);
+        return redirect()->route('customers.index')
+            ->with('success', 'Customer updated successfully.');
     }
 
     public function destroy($id)
